@@ -23,9 +23,9 @@ class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }else {
             responseJson.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             responseJson.put("message", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<JSONObject>(responseJson, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(responseJson, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<JSONObject>(responseJson, HttpStatus.NOT_FOUND);
+        return new ResponseEntity(responseJson, HttpStatus.NOT_FOUND);
     }
 }
