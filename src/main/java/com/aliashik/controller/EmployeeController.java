@@ -4,9 +4,7 @@ import com.aliashik.dto.EmployeeDTO;
 import com.aliashik.exception.EmployeeNotFoundException;
 import com.aliashik.model.Employee;
 import com.aliashik.repository.EmployeeRepository;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +17,26 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/v1")
-@Api(tags = "Employee", description = "Employee Resource", value = "employee")
+@Api(tags = "employee", value = "employee", description = "Employee Resource")
 class EmployeeController {
 
     @Autowired
     private EmployeeRepository repository;
 
-    @ApiOperation(value = "Get employees", notes = "This api fetches all of the employees, no param is required")
+    @ApiOperation(value = "View a list of available employees", response = Iterable.class, notes = "This api fetches all of the employees, no param is required")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @GetMapping(value = "/employees", produces = "application/json")
     public ResponseEntity<List<Employee>> getEmployees() {
         return new ResponseEntity(repository.findAll(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Create an Employee", notes = "This api creates an Employee, corresponding json is required")
+    @ApiOperation(value = "Add an Employee", response = Employee.class, notes = "This api creates an Employee, corresponding json is required")
     @PostMapping(value = "/employees", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Employee> createEmployee(
             @ApiParam(value = "employee json", required = true) @RequestBody EmployeeDTO employeeDTO) {
@@ -41,7 +46,7 @@ class EmployeeController {
         return new ResponseEntity(repository.save(employee), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Get Employee with id", notes = "This api gets an Employee with employee id")
+    @ApiOperation(value = "Search an employee with an id", response = Employee.class, notes = "This api gets an Employee with employee id")
     @GetMapping(value = "/employees/{id}", produces = "application/json")
     public ResponseEntity<Employee> getEmployee(
             @ApiParam(value = "id", required = true) @PathVariable Long id) {
@@ -50,7 +55,7 @@ class EmployeeController {
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found")), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Update and Employee", notes = "This api updates an Employee")
+    @ApiOperation(value = "Update an Employee", response = Employee.class, notes = "This api updates an Employee")
     @PutMapping(value = "/employees/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Employee> updateEmployee(
             @ApiParam(value = "employee json", required = true) @RequestBody EmployeeDTO employeeDTO,
