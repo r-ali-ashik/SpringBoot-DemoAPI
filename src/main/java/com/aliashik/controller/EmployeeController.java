@@ -41,7 +41,7 @@ class EmployeeController {
         return new ResponseEntity(repository.save(employee), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Get Employee wit id", notes = "This api gets an Employee with employee id")
+    @ApiOperation(value = "Get Employee with id", notes = "This api gets an Employee with employee id")
     @GetMapping(value = "/employees/{id}", produces = "application/json")
     public ResponseEntity<Employee> getEmployee(
             @ApiParam(value = "id", required = true) @PathVariable Long id) {
@@ -50,8 +50,11 @@ class EmployeeController {
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found")), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update and Employee", notes = "This api updates an Employee")
     @PutMapping(value = "/employees/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable Long id) {
+    public ResponseEntity<Employee> updateEmployee(
+            @ApiParam(value = "employee json", required = true) @RequestBody EmployeeDTO employeeDTO,
+            @ApiParam(value = "employee id", required = true) @PathVariable Long id) {
 
         return repository.findById(id)
                 .map(employee -> {
@@ -67,6 +70,7 @@ class EmployeeController {
                 });
     }
 
+    @ApiOperation(value = "Delete an Employee", notes = "This api deletes an Employee")
     @DeleteMapping(value = "/employees/{id}", produces = "application/json")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable Long id) {
         repository.deleteById(id);
