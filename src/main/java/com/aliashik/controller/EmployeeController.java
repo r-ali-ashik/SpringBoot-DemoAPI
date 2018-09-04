@@ -33,6 +33,7 @@ class EmployeeController {
     })
     @GetMapping(value = "/employees", produces = "application/json")
     public ResponseEntity<List<Employee>> getEmployees() {
+        log.info("get all employees");
         return new ResponseEntity(repository.findAll(), HttpStatus.OK);
     }
 
@@ -41,6 +42,7 @@ class EmployeeController {
     public ResponseEntity<Employee> createEmployee(
             @ApiParam(value = "employee json", required = true) @RequestBody EmployeeDTO employeeDTO) {
 
+        log.info("add an employee");
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
         return new ResponseEntity(repository.save(employee), HttpStatus.CREATED);
@@ -51,6 +53,7 @@ class EmployeeController {
     public ResponseEntity<Employee> getEmployee(
             @ApiParam(value = "id", required = true) @PathVariable Long id) {
 
+        log.info("get an employee with id");
         return new ResponseEntity(repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found")), HttpStatus.OK);
     }
@@ -61,6 +64,7 @@ class EmployeeController {
             @ApiParam(value = "employee json", required = true) @RequestBody EmployeeDTO employeeDTO,
             @ApiParam(value = "employee id", required = true) @PathVariable Long id) {
 
+        log.info("update an employee");
         return repository.findById(id)
                 .map(employee -> {
                     employee.setName(employeeDTO.getName());
@@ -78,6 +82,8 @@ class EmployeeController {
     @ApiOperation(value = "Delete an Employee", notes = "This api deletes an Employee")
     @DeleteMapping(value = "/employees/{id}", produces = "application/json")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable Long id) {
+
+        log.info("delete an employee");
         repository.deleteById(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

@@ -40,7 +40,7 @@ public class SwaggerConfig {
                 .description("Spring Boot demo REST API")
                 .version("1.0.0")
                 .license("MIT License")
-                .licenseUrl("aliashik.blogspot.com\"")
+                .licenseUrl("https://opensource.org/licenses/MIT")
                 .contact(new Contact("Ali Ashik", "www.facebook.com/r.ali.ashik", "ramjan.ali.ashik@gmail.com"))
                 .build();
     }
